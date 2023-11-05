@@ -111,7 +111,7 @@ class Shields:
            %%#####%%&%%&%@%##(##(((((%%%          
              ####&&@@@&##%#%&%&&&#%%&@            
                (#%&&@@@@@@&&&%  %#&(     """
-        shield = "1"
+        shield = 1
         durability = 100
         description = "The aspis or hoplon was a large, round shield made of wood and covered with bronze. It was an essential defensive tool used by hoplites, providing protection for the warrior and forming a phalanx formation with other soldiers."
 
@@ -139,7 +139,7 @@ class Shields:
                     //////(((#(.                  
                       (/((/((.                    
                         (.#(        """
-        shield = "3"
+        shield = 3
         durability = "175"
         description = "The pelte was a crescent-shaped shield, often associated with light infantry and skirmishers such as peltasts. It was smaller and lighter than the hoplon, providing mobility for troops who needed to move quickly on the battlefield. The pelte was typically made of wood and covered with leather."
 
@@ -168,7 +168,7 @@ class Shields:
                   ./,(/*,,*(/((**,,*./,               
                       ,*,(##//(,*/.                   
                           .,*.                        """
-        shield = "5"
+        shield = 5
         durability = "200"
         description = "The thureos was a rectangular or oval-shaped shield that became popular during the Hellenistic period. It had a curved surface and was slightly concave, providing better protection than some other shield types."
 
