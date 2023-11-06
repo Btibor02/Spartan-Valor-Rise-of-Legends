@@ -15,57 +15,65 @@ def printSlow(str):
 
 
 def playerAttack(enemy):
-    key = getkey()
-    if key == "1":
-        chance = random.randint(0, 10)
-        if chance >= 0 and chance <= 6:
-            dmg = INVENTORY[0][2]
-            print(f'You did {dmg} damage')
-            enemy[4] -= dmg
-        if chance > 6 and chance <= 9:
-            print(f'{enemy[0]} blocked your attack')
-            if INVENTORY[0][2] - enemy[3] <= 0:
-                print("Your weapon did not do any damage") 
-            else:
-                dmg = INVENTORY[0][2] - enemy[3]
+    if PLAYERSTATS[0] > 0:
+        key = getkey()
+        if key == "1":
+            chance = random.randint(0, 10)
+            if chance >= 0 and chance <= 6:
+                dmg = INVENTORY[0][2]
                 print(f'You did {dmg} damage')
                 enemy[4] -= dmg
-        if chance == 10:
-            print(f'{enemy[0]} evaded your attack')
-            print("You did 0 damage")
-        print(f'HP: {enemy[4]}')
-        # TODO durability
-    elif key == "2":
-        # TODO a shieldnek potinak legyen értelme
-        print("Choose an equipment: ")
-        if INVENTORY[2][3] > 0:
-            print("1. Heal potion")
-        elif INVENTORY[3][3] > 0:
-            print("2. Shield potion")
-            # ! Ha nincs heal akkor ez legyen az első
-        else:
-            print("You do not have any equipment!")
-        
-        key = getkey()
-        # TODO Ne lehessen megnyitni ha nincs neki
-        if key == "1":
-            if PLAYERSTATS[0] == 100:
-                print("You can not use a Heal potion because you have max hp")
-            else:
-                if PLAYERSTATS[0] > 80:
-                    healed = 100 - PLAYERSTATS[0]
-                    print(f'You healed {healed} hp and reached max hp')
+            if chance > 6 and chance <= 9:
+                print(f'{enemy[0]} blocked your attack')
+                if INVENTORY[0][2] - enemy[3] <= 0:
+                    print("Your weapon did not do any damage") 
                 else:
-                    print("You healed 20 hp")
-                    PLAYERSTATS[0] += 20
-                    print(f'Your new hp: {PLAYERSTATS[0]}')
+                    dmg = INVENTORY[0][2] - enemy[3]
+                    print(f'You did {dmg} damage')
+                    enemy[4] -= dmg
+            if chance == 10:
+                print(f'{enemy[0]} evaded your attack')
+                print("You did 0 damage")
+            print(f'HP: {enemy[4]}')
+            # TODO durability
+        elif key == "2":
+            # TODO a shieldnek potinak1 legyen értelme
+            # ? Ha van shield, akkor onnan a dmg onnan vonódjon le, ezt majd akkor kell megcsinálni ha tudok tesztelni rendes ellenséggel
+            if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
+                print("You do not have any equipment!")
+            else:
+                counter = 1
+                for i in range(len(INVENTORY)-2):
+                    if INVENTORY[i + 2][3] > 0:
+                        print(f'{counter}. {INVENTORY[i + 2][0]}')
+                        counter += 1            
+            key = getkey()
+            if key == "1" and INVENTORY[2][3] > 0:
+                if PLAYERSTATS[0] == 100:
+                    print("You can not use a Heal potion because you have max hp\n")
+                else:
+                    if PLAYERSTATS[0] > 80:
+                        healed = 100 - PLAYERSTATS[0]
+                        print(f'You healed {healed} hp and reached max hp\n')
+                    else:
+                        print("You healed 20 hp")
+                        PLAYERSTATS[0] += 20
+                        print(f'Your new hp: {PLAYERSTATS[0]}\n')
+            fight(enemy=enemy)
+    else:
+        print("You have died!\nWould you like to start again? (y/n)")
+        key = getkey()
+        if key == "y":
+            mainMenu()
+            # TODO minden statot visszaállitani az eredetire 
+        elif key == "n":
+            None
     print(TEXTBRAKE)
 
     return enemy
 
 
 def enemyAttack(enemy):
-    # TODO ha meghal akkor ne tudjon még egyet ütni
     chance = random.randint(0, 10)
     if chance >= 0 and chance <= 6:
         dmg = enemy[2]
@@ -84,8 +92,8 @@ def enemyAttack(enemy):
         print(f"{enemy[0]} did 0 damage")
     print(f'Your HP: {PLAYERSTATS[0]}')
     print(TEXTBRAKE)
-
-    return
+        
+    return enemy
 
 
 
@@ -98,10 +106,12 @@ def fight(enemy):
         print(TEXTBRAKE)
 
         playerAttack(enemy=enemy)
-        enemyAttack(enemy=enemy)
+        if enemy[4] > 0:
+            enemyAttack(enemy=enemy)
+        else:
+            print(f'Congratulation! You have killed {enemy[0]}!')
+            # TODO loot odadása
     
-    print("You won!")
-    # ! ha meghal a karakterünk
     # ! jutalmak elosztása
         
         
@@ -115,7 +125,13 @@ def checkInventory():
     while keepInventory == True:
         print(f'Weapon = {INVENTORY[0][0]}')
         print(f'Shield = {INVENTORY[1][0]}')
-        print(f'Equipment = {INVENTORY[2][3]}x {INVENTORY[2][0]}, {INVENTORY[3][3]}x {INVENTORY[3][0]},')
+        equipment = ""
+        for i in range(len(INVENTORY)-2):
+            try:
+                equipment += f'{INVENTORY[i + 2][3]}x {INVENTORY[i + 2][0]}, '
+            except:
+                equipment = equipment
+        print(f'Equipment = {equipment}')
         keepInventory = False
 
     print("Would you like to take a look at the stats of an item? (y/n)")
@@ -150,28 +166,34 @@ def checkInventory():
                 keepLookAtItems = True
             if key == "3":
                 print("Choose an equipment: ")
-                if INVENTORY[2][3] > 0:
-                    print("1. Heal potion")
-                elif INVENTORY[3][3] > 0:
-                    print("2. Shield potion")
-                    # ! Ha nincs heal akkor ez legyen az első
-                # ! ha van kulcs akkor jelenjen meg
-                else:
+                if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
                     print("You do not have any equipment!")
-                
-                key = getkey()
-                # TODO Ne lehessen megnyitni ha nincs neki
-                if key == "1":
-                    print(f'Name: {INVENTORY[2][0]}')
-                    print(f'{INVENTORY[2][1]}')
-                    print(f'Quantity: {INVENTORY[2][3]}')
-                    print(f'Description: {INVENTORY[2][4]}')
+                else:
+                    counter = 1
+                    for i in range(len(INVENTORY)-2):
+                        if INVENTORY[i + 2][3] > 0:
+                            print(f'{counter}. {INVENTORY[i + 2][0]}')
+                            counter += 1
+                    key = getkey()
+                    potion = 2
+                    if counter == 2:
+                        if INVENTORY[2][3] > 0:
+                            potion = 2
+                        else:
+                            potion = 3
+
+                    if key == "1":
+                        print(f'Name: {INVENTORY[potion][0]}')
+                        print(f'{INVENTORY[potion][1]}')
+                        print(f'Quantity: {INVENTORY[potion][3]}')
+                        print(f'Description: {INVENTORY[potion][4]}')
                     
-                if key == "2":
-                    print(f'Name: {INVENTORY[3][0]}')
-                    print(f'{INVENTORY[3][1]}')
-                    print(f'Quantity: {INVENTORY[3][3]}')
-                    print(f'Description: {INVENTORY[3][4]}')
+                    elif key == "2" and counter == 3:
+                        print(f'Name: {INVENTORY[counter][0]}')
+                        print(f'{INVENTORY[counter][1]}')
+                        print(f'Quantity: {INVENTORY[counter][3]}')
+                        print(f'Description: {INVENTORY[counter][4]}')
+                # TODO ha van kulcs akkor jelenjen meg
                 keepLookAtItems = True
             if key == "4":
                 keepLookAtItems = False
@@ -186,7 +208,6 @@ def parnassusForest():
 
 
 def tutorialFight():
-    print(TEXTBRAKE)
     printSlow("But before you go further, you see a mannequin, and since you haven't fought in a while, you decide to start practicing")
     printSlow("\nYou can see the opponent's statistics before every battle, and you can take various actions")
     print(TEXTBRAKE)
