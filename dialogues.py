@@ -1,4 +1,5 @@
 import sys, time
+import items
 
 
 def printSlow(str):
@@ -37,6 +38,17 @@ class Start():
                    '"Thank you, wise Thalassa," you said, your voice filled with respect. "I will heed your guidance and embark on this sacred journey."')
         printSlow("\nWith a serene smile, Thalassa raised her hand, tracing a protective sigil in the air.\n"
                     '"May the gods watch over you, brave one. Remember, in the realm of shadows, courage is your light, and wisdom is your sword. Go now, and may your steps be guided by the spirits of the ancients."')
-        printSlow("\nAnd so, armed with Thalassa's knowledge and the blessings of the gods, you set forth towards the Parnassus Forest, ready to face the challenges that lay ahead and unveil the mysteries of the lost crypt.")
+        printSlow("\nAnd so, armed with Thalassa's knowledge and the blessings of the gods, you set forth towards the Parnassus Forest, ready to face the challenges that lay ahead and unveil the mysteries of the lost crypt.\n")
+        return
+    
+    def parnassusForest(chance):
+        printSlow("\nA dense, ancient woodland shrouded in a tapestry of towering trees and vibrant foliage. Sunlight filters through the canopy, creating a mosaic of light and shadow on the moss-covered ground. ")
+        printSlow("\nThe air is rich with the fragrance of blooming flowers and pine. The forest's atmosphere is both serene and mysterious, with occasional glimpses of wildlife and a sense that the trees themselves hold untold secrets.")
+        printSlow("\nYou found a chest half-concealed by leaves. Carved with ancient symbols, it beckons with mystery.\n")
+        print(items.Items.chestWithLeaf())
+        if chance < 7:
+                printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, and a map hinting at uncharted territories.\n")
+        elif chance >= 7:
+                printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, a map hinting at uncharted territories, and a spear.\n")
         return
         

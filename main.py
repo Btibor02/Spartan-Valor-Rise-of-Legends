@@ -1,10 +1,10 @@
-import sys, time, random
-import equipment, dialogues, enemies
+import sys, time, random, os
+import equipments, dialogues, enemies, items
 from getkey import getkey
 
-PLAYERSTATS = [100, 0] #HP, SHIELD
-INVENTORY = [equipment.Weapons.Kolós(), equipment.Shields.AspisOfHoplon(), equipment.Potions.Heal(), equipment.Potions.Shield()]
-NAME = ""
+global PLAYERSTATS
+global INVENTORY
+global NAME
 TEXTBRAKE = f'\n{"":-^147}\n'
 
 def printSlow(str):
@@ -14,15 +14,17 @@ def printSlow(str):
         time.sleep(0.02)
 
 
-def playerAttack(enemy):
+def playerAttack(enemy, weapon):
     if PLAYERSTATS[0] > 0:
         key = getkey()
+        os.system('cls||clear')
         if key == "1":
             chance = random.randint(0, 10)
             if chance >= 0 and chance <= 6:
                 dmg = INVENTORY[0][2]
                 print(f'You did {dmg} damage')
                 enemy[4] -= dmg
+                weapon[3] -= 1
             if chance > 6 and chance <= 9:
                 print(f'{enemy[0]} blocked your attack')
                 if INVENTORY[0][2] - enemy[3] <= 0:
@@ -31,11 +33,13 @@ def playerAttack(enemy):
                     dmg = INVENTORY[0][2] - enemy[3]
                     print(f'You did {dmg} damage')
                     enemy[4] -= dmg
+                    weapon[3] -= 1
             if chance == 10:
                 print(f'{enemy[0]} evaded your attack')
                 print("You did 0 damage")
             print(f'HP: {enemy[4]}')
             # TODO durability
+            # ? minden blockol támadás után a pajzs durabilityje menjen le, minden sikeres ütésnél a kardé
         elif key == "2":
             # TODO a shieldnek potinak1 legyen értelme
             # ? Ha van shield, akkor onnan a dmg onnan vonódjon le, ezt majd akkor kell megcsinálni ha tudok tesztelni rendes ellenséggel
@@ -64,16 +68,18 @@ def playerAttack(enemy):
         print("You have died!\nWould you like to start again? (y/n)")
         key = getkey()
         if key == "y":
+            os.system('cls||clear')
             mainMenu()
             # TODO minden statot visszaállitani az eredetire 
         elif key == "n":
             None
+            # TODO lépjen ki a programból
     print(TEXTBRAKE)
 
-    return enemy
+    return enemy, weapon
 
 
-def enemyAttack(enemy):
+def enemyAttack(enemy, shield):
     chance = random.randint(0, 10)
     if chance >= 0 and chance <= 6:
         dmg = enemy[2]
@@ -81,8 +87,9 @@ def enemyAttack(enemy):
         PLAYERSTATS[0] -= dmg
     if chance > 6 and chance <= 9:
         print(f"You blocked {enemy[0]}'s attack")
+        shield[3] -= 1
         if enemy[2] - INVENTORY[1][2] <= 0:
-            print(f"{enemy[0]}'s weapon did not do any damage") 
+            print(f"{enemy[0]}'s weapon did not do any damage")
         else:
             dmg = enemy[2] - INVENTORY[1][2]
             print(f'{enemy[0]} did {dmg} damage')
@@ -93,31 +100,32 @@ def enemyAttack(enemy):
     print(f'Your HP: {PLAYERSTATS[0]}')
     print(TEXTBRAKE)
         
-    return enemy
+    return enemy, shield
 
 
 
 def fight(enemy):
     enemy = list(enemy)
+    weapon = list(INVENTORY[0])
+    shield = list(INVENTORY[1])
     while enemy[4] > 0:
         print("What would you like to do? ")
         print("1. Attack")
         print("2. Use equipment")
         print(TEXTBRAKE)
 
-        playerAttack(enemy=enemy)
+        playerAttack(enemy=enemy, weapon=weapon)
         if enemy[4] > 0:
-            enemyAttack(enemy=enemy)
+            enemyAttack(enemy=enemy, shield=shield)
         else:
-            print(f'Congratulation! You have killed {enemy[0]}!')
+            print(f'Congratulation! You have defeated {enemy[0]}!')
+            INVENTORY[0] = weapon
+            INVENTORY[1] = shield
+            print(INVENTORY[0])
             # TODO loot odadása
     
     # ! jutalmak elosztása
-        
-        
-
-                
-
+    return
 
 
 def checkInventory():
@@ -125,10 +133,11 @@ def checkInventory():
     while keepInventory == True:
         print(f'Weapon = {INVENTORY[0][0]}')
         print(f'Shield = {INVENTORY[1][0]}')
+        print(f'Gold = {PLAYERSTATS[2]}')
         equipment = ""
         for i in range(len(INVENTORY)-2):
             try:
-                equipment += f'{INVENTORY[i + 2][3]}x {INVENTORY[i + 2][0]}, '
+                equipment += f'{INVENTORY[i + 2][3]}x {INVENTORY[i + 2][0], }, '
             except:
                 equipment = equipment
         print(f'Equipment = {equipment}')
@@ -200,11 +209,34 @@ def checkInventory():
 
     elif key == "n":
         keepInventory = False
+        os.system('cls||clear')
     return
 
 
 def parnassusForest():
-    None
+    chance = random.randint(0, 10) 
+    dialogues.Start.parnassusForest(chance=chance)
+    PLAYERSTATS[2] += 50
+    if chance >= 7:
+        print(f'Name: {equipments.Weapons.Dory()[0]}')
+        print(f'{equipments.Weapons.Dory()[1]}')
+        print('Damage: ' + '\33[32m' + str(equipments.Weapons.Dory()[2]) + '\33[0m')
+        print('Durability: ' + '\33[32m' + str(equipments.Weapons.Dory()[3]) + '\33[0m')
+        print(f'Description: {equipments.Weapons.Dory()[4]}')
+
+        print("Would you like to take it? (y/n)")
+        key = getkey()
+        if key == "y":
+            INVENTORY[0] = equipments.Weapons.Dory()
+            TEXTBRAKE
+            checkInventory()
+        elif key == "n":
+            None
+    # TODO INNEN FOLYTATÓDIK
+    
+
+    
+
 
 
 def tutorialFight():
@@ -219,6 +251,7 @@ def tutorialFight():
     print(TEXTBRAKE)
 
     fight(enemy=enemies.Enemies.mannequin())
+    parnassusForest()
 
 
 
@@ -260,6 +293,7 @@ def newGame():
     key = getkey()
 
     if key == "1":
+        os.system('cls||clear')
         intro()
     elif key == "2":
         mainMenu()
@@ -288,7 +322,14 @@ def mainMenu():
         print(f'{"2. Load Game":^146}')
         # ? Később akár settings és difficulty választás
         print(f'{"3. Exit":^141}')
-        
+
+        global PLAYERSTATS
+        global INVENTORY
+        global NAME
+
+        PLAYERSTATS = [100, 0, 100] #HP, SHIELD, GOLD
+        INVENTORY = [equipments.Weapons.Kolós(), equipments.Shields.AspisOfHoplon(), equipments.Potions.Heal(), equipments.Potions.Shield()]
+        NAME = ""
 
         key = getkey()
         print(TEXTBRAKE)
@@ -301,6 +342,10 @@ def mainMenu():
             loadGame()
         elif key == "3":
             keepMenu = False
+        elif key == "4":
+            # ! TESZT mód
+            keepMenu = False
+            tutorialFight()
     
     
 mainMenu()
