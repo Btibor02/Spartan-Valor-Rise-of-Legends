@@ -38,10 +38,8 @@ def playerAttack(enemy, weapon):
                 print(f'{enemy[0]} evaded your attack')
                 print("You did 0 damage")
             print(f'HP: {enemy[4]}')
-            # TODO durability
-            # ? minden blockol támadás után a pajzs durabilityje menjen le, minden sikeres ütésnél a kardé
         elif key == "2":
-            # TODO a shieldnek potinak1 legyen értelme
+            # TODO a shield potinak legyen értelme
             # ? Ha van shield, akkor onnan a dmg onnan vonódjon le, ezt majd akkor kell megcsinálni ha tudok tesztelni rendes ellenséggel
             if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
                 print("You do not have any equipment!")
@@ -70,10 +68,8 @@ def playerAttack(enemy, weapon):
         if key == "y":
             os.system('cls||clear')
             mainMenu()
-            # TODO minden statot visszaállitani az eredetire 
         elif key == "n":
-            None
-            # TODO lépjen ki a programból
+            quit()
     print(TEXTBRAKE)
 
     return enemy, weapon
@@ -124,7 +120,6 @@ def fight(enemy):
             print(INVENTORY[0])
             # TODO loot odadása
     
-    # ! jutalmak elosztása
     return
 
 
@@ -232,7 +227,7 @@ def parnassusForest():
             checkInventory()
         elif key == "n":
             None
-    # TODO INNEN FOLYTATÓDIK
+    # ! INNEN FOLYTATÓDIK
     
 
     
@@ -302,7 +297,7 @@ def newGame():
 
 def loadGame():
     None
-    # ! Will be later implemented
+    # TODO Will be later implemented
 
 def mainMenu():
     keepMenu = True
@@ -345,7 +340,7 @@ def mainMenu():
         elif key == "4":
             # ! TESZT mód
             keepMenu = False
-            tutorialFight()
+            quit()
     
     
 mainMenu()
