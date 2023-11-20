@@ -15,6 +15,7 @@ def printSlow(str):
 
 
 def playerAttack(enemy, weapon):
+    healPotion = list(INVENTORY[2])
     if PLAYERSTATS[0] > 0:
         key = getkey()
         os.system('cls||clear')
@@ -56,10 +57,14 @@ def playerAttack(enemy, weapon):
                 else:
                     if PLAYERSTATS[0] > 80:
                         healed = 100 - PLAYERSTATS[0]
+                        PLAYERSTATS[0] += healed
+                        healPotion[3] -= 1
+
                         print(f'You healed {healed} hp and reached max hp\n')
                     else:
                         print("You healed 20 hp")
                         PLAYERSTATS[0] += 20
+                        healPotion[3] -= 1
                         print(f'Your new hp: {PLAYERSTATS[0]}\n')
             fight(enemy=enemy)
     else:
@@ -102,6 +107,14 @@ def enemyAttack(enemy, shield):
 
 def fight(enemy):
     enemy = list(enemy)
+    print(TEXTBRAKE)
+    print(f'\nName: {enemy[0]}')
+    print(f'{enemy[1]}\n')
+    print(f'Damage: {enemy[2]}')
+    print(f'Block: {enemy[3]}')
+    print(f'HP: {enemy[4]}')
+    print(TEXTBRAKE)
+
     weapon = list(INVENTORY[0])
     shield = list(INVENTORY[1])
     while enemy[4] > 0:
@@ -113,18 +126,17 @@ def fight(enemy):
         playerAttack(enemy=enemy, weapon=weapon)
         if enemy[4] > 0:
             enemyAttack(enemy=enemy, shield=shield)
-        else:
-            print(f'Congratulation! You have defeated {enemy[0]}!')
-            INVENTORY[0] = weapon
-            INVENTORY[1] = shield
-            print(INVENTORY[0])
-            # TODO loot odadása
+    print(f'Congratulation! You have defeated {enemy[0]}!')
+    INVENTORY[0] = weapon
+    INVENTORY[1] = shield
+    # TODO loot odadása
     
     return
 
 
 def checkInventory():
     keepInventory = True
+    print("INVENTORY")
     while keepInventory == True:
         print(f'Weapon = {INVENTORY[0][0]}')
         print(f'Shield = {INVENTORY[1][0]}')
@@ -210,7 +222,7 @@ def checkInventory():
 
 def parnassusForest():
     chance = random.randint(0, 10) 
-    dialogues.Start.parnassusForest(chance=chance)
+    dialogues.Start.parnassusForest(chance=chance, first = True)
     PLAYERSTATS[2] += 50
     if chance >= 7:
         print(f'Name: {equipments.Weapons.Dory()[0]}')
@@ -227,6 +239,10 @@ def parnassusForest():
             checkInventory()
         elif key == "n":
             None
+    dialogues.Start.parnassusForest(chance=chance, first=False)
+    fight(enemy=enemies.Enemies.forestSentinel())
+    print("Yay")
+
     # ! INNEN FOLYTATÓDIK
     
 
@@ -237,13 +253,6 @@ def parnassusForest():
 def tutorialFight():
     printSlow("But before you go further, you see a mannequin, and since you haven't fought in a while, you decide to start practicing")
     printSlow("\nYou can see the opponent's statistics before every battle, and you can take various actions")
-    print(TEXTBRAKE)
-    print(f'\nName: {enemies.Enemies.mannequin()[0]}')
-    print(f'{enemies.Enemies.mannequin()[1]}\n')
-    print(f'Damage: {enemies.Enemies.mannequin()[2]}')
-    print(f'Block: {enemies.Enemies.mannequin()[3]}')
-    print(f'HP: {enemies.Enemies.mannequin()[4]}')
-    print(TEXTBRAKE)
 
     fight(enemy=enemies.Enemies.mannequin())
     parnassusForest()
@@ -340,7 +349,7 @@ def mainMenu():
         elif key == "4":
             # ! TESZT mód
             keepMenu = False
-            quit()
+            parnassusForest()
     
     
 mainMenu()

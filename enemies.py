@@ -31,3 +31,33 @@ class Enemies():
         hp = 30
 
         return name, image, damage, block, hp
+    
+    def forestSentinel():
+        name = "Forest Sentinel"
+        image = """                                                   
+                           *   &                            
+                      * (  (#,                              
+                       *  ./ **(###  #  %                   
+                    %  #(( (%##%   /*                       
+                 #*  //  /%/.#/, ( /                        
+                     /(  //((**.,((/                        
+                        /( (#.. /  (*                       
+                      ((    (*,*     (/                     
+                   //&(     (#*#       %.                   
+                  /*(      #%##(/        *                  
+                */#        /#//,/         ,                 
+               (/           ###(/         .*                
+              (             #%((           *.               
+              (.            (((/#        /  .               
+              (.            #%@#%                           
+                (           (#&%#                           
+                /           (%&&%&                          
+                            &%&%%&                          
+                            &@@@@#                          
+                         &%&@&%%@@&&                        
+                         .  . . ,&&.#& """
+        damage = 5
+        block = 2
+        hp = 20
+
+        return name, image, damage, block, hp

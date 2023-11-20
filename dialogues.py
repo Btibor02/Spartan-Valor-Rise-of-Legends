@@ -1,4 +1,4 @@
-import sys, time
+import sys, time, os
 import items
 
 
@@ -41,14 +41,22 @@ class Start():
         printSlow("\nAnd so, armed with Thalassa's knowledge and the blessings of the gods, you set forth towards the Parnassus Forest, ready to face the challenges that lay ahead and unveil the mysteries of the lost crypt.\n")
         return
     
-    def parnassusForest(chance):
-        printSlow("\nA dense, ancient woodland shrouded in a tapestry of towering trees and vibrant foliage. Sunlight filters through the canopy, creating a mosaic of light and shadow on the moss-covered ground. ")
-        printSlow("\nThe air is rich with the fragrance of blooming flowers and pine. The forest's atmosphere is both serene and mysterious, with occasional glimpses of wildlife and a sense that the trees themselves hold untold secrets.")
-        printSlow("\nYou found a chest half-concealed by leaves. Carved with ancient symbols, it beckons with mystery.\n")
-        print(items.Items.chestWithLeaf())
-        if chance < 7:
-                printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, and a map hinting at uncharted territories.\n")
-        elif chance >= 7:
-                printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, a map hinting at uncharted territories, and a spear.\n")
+    def parnassusForest(chance, first):
+        if first == True:
+                printSlow("\nA dense, ancient woodland shrouded in a tapestry of towering trees and vibrant foliage. Sunlight filters through the canopy, creating a mosaic of light and shadow on the moss-covered ground. ")
+                printSlow("The air is rich with the fragrance of blooming flowers and pine. The forest's atmosphere is both serene and mysterious, with occasional glimpses of wildlife and a sense that the trees themselves hold untold secrets. ")
+                printSlow("You found a chest half-concealed by leaves. Carved with ancient symbols, it beckons with mystery.\n")
+                print(items.Items.chestWithLeaf())
+                if chance < 7:
+                        printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, and a map hinting at uncharted territories.\n")
+                elif chance >= 7:
+                        printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, a map hinting at uncharted territories, and a spear.\n")
+        elif first == False:
+                printSlow("\nYou follow the enchanted map to the sacred grove of Artemis. A hidden path materializes, guiding them toward the entrance of the crypt. With the forest as their silent ally, the hero approaches the looming shadows, sword raised, ready to unveil the mysteries concealed within. \n")
+                time.sleep(5)
+                printSlow("A lone figure emerges from the shadows of the Parnassus Forest, a skilled guardian known as the Forest Sentinel. Cloaked in a mantle woven from the forest's secrets, this solitary archer moves with the grace of the ancient trees. ")
+                printSlow("\nTo continue your journey, you must defeat the sentinel in a battle\n")
+                time.sleep(5)
+
         return
         
