@@ -67,8 +67,9 @@ class Weapons:
         damage = 8
         durability = 275
         description = "The xiphos was a short, double-edged sword with a leaf-shaped blade. It was a secondary weapon for Greek soldiers, often used in close combat."
+        price = 130
 
-        return name, image, damage, durability, description
+        return name, image, damage, durability, description, price
     
     def Labrys():
         name = "Labrys"
@@ -91,8 +92,11 @@ class Weapons:
         damage = 11
         durability = 150
         description = "The labrys was a double-headed axe and was mainly used as a ceremonial or symbolic weapon. It had religious significance in some cultures, such as the Minoans."
+        price = 200
 
-        return name, image, damage, durability, description
+        return name, image, damage, durability, description, price
+    
+    # ! NEED MORE WEAPONS
     
 class Shields:
     def AspisOfHoplon():

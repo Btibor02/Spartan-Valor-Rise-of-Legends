@@ -1,6 +1,8 @@
 import sys, time, os
 import items
+from getkey import getkey
 
+TEXTBRAKE = f'\n{"":-^147}\n'
 
 def printSlow(str):
     for l in str:
@@ -44,13 +46,14 @@ class Start():
     def parnassusForest(chance, first):
         if first == True:
                 printSlow("\nA dense, ancient woodland shrouded in a tapestry of towering trees and vibrant foliage. Sunlight filters through the canopy, creating a mosaic of light and shadow on the moss-covered ground. ")
-                printSlow("The air is rich with the fragrance of blooming flowers and pine. The forest's atmosphere is both serene and mysterious, with occasional glimpses of wildlife and a sense that the trees themselves hold untold secrets. ")
-                printSlow("You found a chest half-concealed by leaves. Carved with ancient symbols, it beckons with mystery.\n")
+                printSlow("\nThe air is rich with the fragrance of blooming flowers and pine. The forest's atmosphere is both serene and mysterious, with occasional glimpses of wildlife and a sense that the trees themselves hold untold secrets. ")
+                printSlow("\nYou found a chest half-concealed by leaves. Carved with ancient symbols, it beckons with mystery.\n")
                 print(items.Items.chestWithLeaf())
                 if chance < 7:
                         printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, and a map hinting at uncharted territories.\n")
                 elif chance >= 7:
                         printSlow("\nOpening it reveals treasures — a set of scrolls, some gold, a map hinting at uncharted territories, and a spear.\n")
+                        print(TEXTBRAKE)
         elif first == False:
                 printSlow("\nYou follow the enchanted map to the sacred grove of Artemis. A hidden path materializes, guiding them toward the entrance of the crypt. With the forest as their silent ally, the hero approaches the looming shadows, sword raised, ready to unveil the mysteries concealed within. \n")
                 time.sleep(5)
@@ -59,4 +62,13 @@ class Start():
                 time.sleep(5)
 
         return
+    
+    def hiddenPeddler(chapter):
+          if chapter == 1:
+                printSlow("Further along the path, you encounter a mysterious figure amidst the trees — a traveling merchant concealed beneath a hooded cloak.\n" 
+                        "The Hidden Peddler's cart, laden with peculiar weapons, shields and supplies, appears almost ethereal amid the dappled sunlight.\n")
+                print("Would you like to take a look at the Hidden Peddler's items? (y/n)")
+                
+
+
         

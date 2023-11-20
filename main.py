@@ -59,14 +59,15 @@ def playerAttack(enemy, weapon):
                         healed = 100 - PLAYERSTATS[0]
                         PLAYERSTATS[0] += healed
                         healPotion[3] -= 1
+                        INVENTORY[2] = healPotion
 
                         print(f'You healed {healed} hp and reached max hp\n')
                     else:
                         print("You healed 20 hp")
                         PLAYERSTATS[0] += 20
                         healPotion[3] -= 1
+                        INVENTORY[2] = healPotion
                         print(f'Your new hp: {PLAYERSTATS[0]}\n')
-            fight(enemy=enemy)
     else:
         print("You have died!\nWould you like to start again? (y/n)")
         key = getkey()
@@ -107,6 +108,7 @@ def enemyAttack(enemy, shield):
 
 def fight(enemy):
     enemy = list(enemy)
+    enemyStillAlive = True
     print(TEXTBRAKE)
     print(f'\nName: {enemy[0]}')
     print(f'{enemy[1]}\n')
@@ -117,18 +119,30 @@ def fight(enemy):
 
     weapon = list(INVENTORY[0])
     shield = list(INVENTORY[1])
-    while enemy[4] > 0:
-        print("What would you like to do? ")
-        print("1. Attack")
-        print("2. Use equipment")
-        print(TEXTBRAKE)
-
-        playerAttack(enemy=enemy, weapon=weapon)
-        if enemy[4] > 0:
-            enemyAttack(enemy=enemy, shield=shield)
-    print(f'Congratulation! You have defeated {enemy[0]}!')
-    INVENTORY[0] = weapon
-    INVENTORY[1] = shield
+    while enemyStillAlive:
+        if enemy[4] <= 0:
+            print(f'Congratulation! You have defeated {enemy[0]}!')
+            INVENTORY[0] = weapon
+            INVENTORY[1] = shield
+            foundGold = random.randint(0,100)
+            PLAYERSTATS[2] += foundGold
+            healPotion = list(INVENTORY[2])
+            foundHealPotion = random.randint(0,3)
+            healPotion[3] += foundHealPotion
+            print(f'You have found {foundGold} gold and {foundHealPotion} Heal Potions')
+            INVENTORY[2] = healPotion
+            enemyStillAlive = False
+        else:
+            if enemy[4] > 0:
+                print("What would you like to do? ")
+                print("1. Attack")
+                print("2. Use equipment")
+                print(TEXTBRAKE)
+                playerAttack(enemy=enemy, weapon=weapon)
+                if enemy[4] > 0:
+                    enemyAttack(enemy=enemy, shield=shield)
+        
+    
     # TODO loot odadása
     
     return
@@ -220,6 +234,76 @@ def checkInventory():
     return
 
 
+def lookAtItemsInShop(item, type):
+    if type == "weapon":
+        print(f'Name: {item[0]}')
+        print(f'{item[1]}')
+        # TODO Fegyver statjainak összehasonlitása és úgy kiszinezni
+        print('Damage: ' + '\33[32m' + str(item[2]) + '\33[0m')
+        print('Durability: ' + '\33[32m' + str(item[3]) + '\33[0m')
+        print(f'Description: {item[4]}')
+        print(f'Price: {item[5]}')
+        print(TEXTBRAKE)
+        print("Would you like to buy it? (y/n)")
+        # TODO
+
+
+
+def hiddenPeddlerShop():
+    keepBrowsing = True
+    while keepBrowsing:
+        print("HIDDEN PEDDLER")
+        print("1. Weapons")
+        print("2. Shields")
+        print("3. Equipments")
+        print("Q - Quit")
+        print(TEXTBRAKE)
+
+        key = getkey()
+        if key == "1":
+            print("1. Xiphos")
+            print("2. Labrys")
+            print("B - Back")
+            print(TEXTBRAKE)
+            key = getkey()
+
+            if key == "1":
+                lookAtItemsInShop(equipments.Weapons.Xiphos(), type="weapon")
+
+            elif key == "2":
+                lookAtItemsInShop(equipments.Weapons.Labrys(), type="weapon")
+
+            elif key == "b":
+                hiddenPeddlerShop()
+
+        elif key == "2":
+            None
+            # TODO
+        elif key == "3":
+            None
+            # TODO
+        elif key == "q":
+            return
+
+
+def hiddenPeddler():
+    dialogues.Start.hiddenPeddler(chapter=1)
+    key = getkey()
+
+    if key == "y":
+            print(TEXTBRAKE)
+            printSlow('\033[1m' + "Hidden Peddler:" + '\033[0m' + "Ah, a seeker of the arcane, I see. In these woods, secrets are my trade.\n"
+                    "\tPotions brewed under the moon's watchful eye, herbs plucked from the oldest groves, and swords and shields, each bearing the essence of this ancient realm. What brings you to my humble emporium?")
+            print(TEXTBRAKE)
+            hiddenPeddlerShop()
+            
+
+    elif key == "n":
+            printSlow("\nYou continue your journey towards the cript.\n")
+            quit
+    
+
+
 def parnassusForest():
     chance = random.randint(0, 10) 
     dialogues.Start.parnassusForest(chance=chance, first = True)
@@ -230,6 +314,7 @@ def parnassusForest():
         print('Damage: ' + '\33[32m' + str(equipments.Weapons.Dory()[2]) + '\33[0m')
         print('Durability: ' + '\33[32m' + str(equipments.Weapons.Dory()[3]) + '\33[0m')
         print(f'Description: {equipments.Weapons.Dory()[4]}')
+        print(TEXTBRAKE)
 
         print("Would you like to take it? (y/n)")
         key = getkey()
@@ -241,13 +326,7 @@ def parnassusForest():
             None
     dialogues.Start.parnassusForest(chance=chance, first=False)
     fight(enemy=enemies.Enemies.forestSentinel())
-    print("Yay")
-
-    # ! INNEN FOLYTATÓDIK
-    
-
-    
-
+    hiddenPeddler()
 
 
 def tutorialFight():
@@ -349,7 +428,7 @@ def mainMenu():
         elif key == "4":
             # ! TESZT mód
             keepMenu = False
-            parnassusForest()
+            hiddenPeddler()
     
     
 mainMenu()
