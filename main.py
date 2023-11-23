@@ -7,6 +7,18 @@ global INVENTORY
 global NAME
 TEXTBRAKE = f'\n{"":-^147}\n'
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    RED    = '\33[31m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def printSlow(str):
     for l in str:
         sys.stdout.write(l)
@@ -19,63 +31,65 @@ def playerAttack(enemy, weapon):
     if PLAYERSTATS[0] > 0:
         key = getkey()
         os.system('cls||clear')
-        if key == "1":
-            chance = random.randint(0, 10)
-            if chance >= 0 and chance <= 6:
-                dmg = INVENTORY[0][2]
-                print(f'You did {dmg} damage')
-                enemy[4] -= dmg
-                weapon[3] -= 1
-            if chance > 6 and chance <= 9:
-                print(f'{enemy[0]} blocked your attack')
-                if INVENTORY[0][2] - enemy[3] <= 0:
-                    print("Your weapon did not do any damage") 
-                else:
-                    dmg = INVENTORY[0][2] - enemy[3]
+        match key:
+            case "1":
+                chance = random.randint(0, 10)
+                if chance >= 0 and chance <= 6:
+                    dmg = INVENTORY[0][2]
                     print(f'You did {dmg} damage')
                     enemy[4] -= dmg
                     weapon[3] -= 1
-            if chance == 10:
-                print(f'{enemy[0]} evaded your attack')
-                print("You did 0 damage")
-            print(f'HP: {enemy[4]}')
-        elif key == "2":
-            # TODO a shield potinak legyen értelme
-            # ? Ha van shield, akkor onnan a dmg onnan vonódjon le, ezt majd akkor kell megcsinálni ha tudok tesztelni rendes ellenséggel
-            if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
-                print("You do not have any equipment!")
-            else:
-                counter = 1
-                for i in range(len(INVENTORY)-2):
-                    if INVENTORY[i + 2][3] > 0:
-                        print(f'{counter}. {INVENTORY[i + 2][0]}')
-                        counter += 1            
-            key = getkey()
-            if key == "1" and INVENTORY[2][3] > 0:
-                if PLAYERSTATS[0] == 100:
-                    print("You can not use a Heal potion because you have max hp\n")
-                else:
-                    if PLAYERSTATS[0] > 80:
-                        healed = 100 - PLAYERSTATS[0]
-                        PLAYERSTATS[0] += healed
-                        healPotion[3] -= 1
-                        INVENTORY[2] = healPotion
-
-                        print(f'You healed {healed} hp and reached max hp\n')
+                if chance > 6 and chance <= 9:
+                    print(f'{enemy[0]} blocked your attack')
+                    if INVENTORY[0][2] - enemy[3] <= 0:
+                        print("Your weapon did not do any damage") 
                     else:
-                        print("You healed 20 hp")
-                        PLAYERSTATS[0] += 20
-                        healPotion[3] -= 1
-                        INVENTORY[2] = healPotion
-                        print(f'Your new hp: {PLAYERSTATS[0]}\n')
+                        dmg = INVENTORY[0][2] - enemy[3]
+                        print(f'You did {dmg} damage')
+                        enemy[4] -= dmg
+                        weapon[3] -= 1
+                if chance == 10:
+                    print(f'{enemy[0]} evaded your attack')
+                    print("You did 0 damage")
+                print(f'HP: {enemy[4]}')
+            case "2":
+                # TODO a shield potinak legyen értelme
+                # ? Ha van shield, akkor onnan a dmg onnan vonódjon le, ezt majd akkor kell megcsinálni ha tudok tesztelni rendes ellenséggel
+                if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
+                    print("You do not have any equipment!")
+                else:
+                    counter = 1
+                    for i in range(len(INVENTORY)-2):
+                        if INVENTORY[i + 2][3] > 0:
+                            print(f'{counter}. {INVENTORY[i + 2][0]}')
+                            counter += 1            
+                key = getkey()
+                if key == "1" and INVENTORY[2][3] > 0:
+                    if PLAYERSTATS[0] == 100:
+                        print("You can not use a Heal potion because you have max hp\n")
+                    else:
+                        if PLAYERSTATS[0] > 80:
+                            healed = 100 - PLAYERSTATS[0]
+                            PLAYERSTATS[0] += healed
+                            healPotion[3] -= 1
+                            INVENTORY[2] = healPotion
+
+                            print(f'You healed {healed} hp and reached max hp\n')
+                        else:
+                            print("You healed 20 hp")
+                            PLAYERSTATS[0] += 20
+                            healPotion[3] -= 1
+                            INVENTORY[2] = healPotion
+                            print(f'Your new hp: {PLAYERSTATS[0]}\n')
     else:
         print("You have died!\nWould you like to start again? (y/n)")
         key = getkey()
-        if key == "y":
-            os.system('cls||clear')
-            mainMenu()
-        elif key == "n":
-            quit()
+        match key:
+            case "y":
+                os.system('cls||clear')
+                mainMenu()
+            case "n":
+                quit()
     print(TEXTBRAKE)
 
     return enemy, weapon
@@ -167,89 +181,152 @@ def checkInventory():
     print("Would you like to take a look at the stats of an item? (y/n)")
     
     key = getkey()
-    if key == "y":
-        keepLookAtItems = True
-        while keepLookAtItems == True:
-            print(TEXTBRAKE)
-            print("Choose an item: ")
-            print("1. Weapon")
-            print("2. Shield")
-            print("3. Equipment")
-            print("4. Close inventory")
-            print(TEXTBRAKE)
+    match key:
+        case "y":
+            keepLookAtItems = True
+            while keepLookAtItems == True:
+                print(TEXTBRAKE)
+                print("Choose an item: ")
+                print("1. Weapon")
+                print("2. Shield")
+                print("3. Equipment")
+                print("4. Close inventory")
+                print(TEXTBRAKE)
 
-            key = getkey()
-            keepLookAtItems = False
-            if key == "1":
-                print(f'Name: {INVENTORY[0][0]}')
-                print(f'{INVENTORY[0][1]}')
-                print(f'Damage: {INVENTORY[0][2]}')
-                print(f'Durability: {INVENTORY[0][3]}')
-                print(f'Description: {INVENTORY[0][4]}')
-                keepLookAtItems = True
-            if key == "2":
-                print(f'Name: {INVENTORY[1][0]}')
-                print(f'{INVENTORY[1][1]}')
-                print(f'Shield: {INVENTORY[1][2]}')
-                print(f'Durability: {INVENTORY[1][3]}')
-                print(f'Description: {INVENTORY[1][4]}')
-                keepLookAtItems = True
-            if key == "3":
-                print("Choose an equipment: ")
-                if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
-                    print("You do not have any equipment!")
-                else:
-                    counter = 1
-                    for i in range(len(INVENTORY)-2):
-                        if INVENTORY[i + 2][3] > 0:
-                            print(f'{counter}. {INVENTORY[i + 2][0]}')
-                            counter += 1
-                    key = getkey()
-                    potion = 2
-                    if counter == 2:
-                        if INVENTORY[2][3] > 0:
-                            potion = 2
-                        else:
-                            potion = 3
-
-                    if key == "1":
-                        print(f'Name: {INVENTORY[potion][0]}')
-                        print(f'{INVENTORY[potion][1]}')
-                        print(f'Quantity: {INVENTORY[potion][3]}')
-                        print(f'Description: {INVENTORY[potion][4]}')
-                    
-                    elif key == "2" and counter == 3:
-                        print(f'Name: {INVENTORY[counter][0]}')
-                        print(f'{INVENTORY[counter][1]}')
-                        print(f'Quantity: {INVENTORY[counter][3]}')
-                        print(f'Description: {INVENTORY[counter][4]}')
-                # TODO ha van kulcs akkor jelenjen meg
-                keepLookAtItems = True
-            if key == "4":
+                key = getkey()
                 keepLookAtItems = False
+                match key:
+                    case "1":
+                        print(f'Name: {INVENTORY[0][0]}')
+                        print(f'{INVENTORY[0][1]}')
+                        print(f'Damage: {INVENTORY[0][2]}')
+                        print(f'Durability: {INVENTORY[0][3]}')
+                        print(f'Description: {INVENTORY[0][4]}')
+                        keepLookAtItems = True
+                    case "2":
+                        print(f'Name: {INVENTORY[1][0]}')
+                        print(f'{INVENTORY[1][1]}')
+                        print(f'Shield: {INVENTORY[1][2]}')
+                        print(f'Durability: {INVENTORY[1][3]}')
+                        print(f'Description: {INVENTORY[1][4]}')
+                        keepLookAtItems = True
+                    case "3":
+                        print("Choose an equipment: ")
+                        if INVENTORY[2][3] == 0 and INVENTORY[3][3] == 0:
+                            print("You do not have any equipment!")
+                        else:
+                            counter = 1
+                            for i in range(len(INVENTORY)-2):
+                                if INVENTORY[i + 2][3] > 0:
+                                    print(f'{counter}. {INVENTORY[i + 2][0]}')
+                                    counter += 1
+                            key = getkey()
+                            potion = 2
+                            if counter == 2:
+                                if INVENTORY[2][3] > 0:
+                                    potion = 2
+                                else:
+                                    potion = 3
 
-    elif key == "n":
-        keepInventory = False
-        os.system('cls||clear')
+                            if key == "1":
+                                print(f'Name: {INVENTORY[potion][0]}')
+                                print(f'{INVENTORY[potion][1]}')
+                                print(f'Quantity: {INVENTORY[potion][3]}')
+                                print(f'Description: {INVENTORY[potion][4]}')
+                            
+                            elif key == "2" and counter == 3:
+                                print(f'Name: {INVENTORY[counter][0]}')
+                                print(f'{INVENTORY[counter][1]}')
+                                print(f'Quantity: {INVENTORY[counter][3]}')
+                                print(f'Description: {INVENTORY[counter][4]}')
+                        # TODO ha van kulcs akkor jelenjen meg
+                        keepLookAtItems = True
+                    case "4":
+                        keepLookAtItems = False
+
+        case "n":
+            keepInventory = False
+            os.system('cls||clear')
     return
 
 
-def lookAtItemsInShop(item, type):
+def buyItemsInShop(item, type):
+    PLAYERSTATS[2] -= item[5]
     if type == "weapon":
+        INVENTORY[0] = item
+    elif type == "shield":
+        INVENTORY[1] = item
+    elif type == "other":
+        if item[0] == "Heal potion":
+            selectedPotion = list(INVENTORY[2])
+            selectedPotion[3] += 1
+            INVENTORY[2] = selectedPotion
+        elif item[0] == "Shield potion":
+            selectedPotion = list(INVENTORY[3])
+            selectedPotion[3] += 1
+            INVENTORY[3] = selectedPotion
+            
+    print(TEXTBRAKE)
+    print(f'Congratulation! You bought {item[0]}.')
+    print(f'New gold balance: {PLAYERSTATS[2]}')
+    print(TEXTBRAKE)
+    checkInventory()
+
+
+def lookAtItemsInShop(item, type):
+    colorDecider1 = bcolors.RED
+    colorDecider2 = bcolors.RED
+    if type == "weapon":
+        if item[2] > INVENTORY[0][2]:
+            colorDecider1 = bcolors.OKGREEN
+        if item[3] > INVENTORY[0][3]:
+            colorDecider2 = bcolors.OKGREEN
+
         print(f'Name: {item[0]}')
         print(f'{item[1]}')
-        # TODO Fegyver statjainak összehasonlitása és úgy kiszinezni
-        print('Damage: ' + '\33[32m' + str(item[2]) + '\33[0m')
-        print('Durability: ' + '\33[32m' + str(item[3]) + '\33[0m')
+        print('Damage: ' + colorDecider1 + str(item[2]) + bcolors.ENDC)
+        print('Durability: ' + colorDecider2 + str(item[3]) + bcolors.ENDC)
         print(f'Description: {item[4]}')
         print(f'Price: {item[5]}')
         print(TEXTBRAKE)
-        print("Would you like to buy it? (y/n)")
-        # TODO
+    elif type == "shield":
+        if item[2] > INVENTORY[1][2]:
+            colorDecider1 = bcolors.OKGREEN
+        if item[3] > INVENTORY[1][3]:
+            colorDecider2 = bcolors.OKGREEN
+
+        print(f'Name: {item[0]}')
+        print(f'{item[1]}')
+        print('Shield: ' + colorDecider1 + str(item[2]) + bcolors.ENDC)
+        print('Durability: ' + colorDecider2 + str(item[3]) + bcolors.ENDC)
+        print(f'Description: {item[4]}')
+        print(f'Price: {item[5]}')
+        print(TEXTBRAKE)
+    elif type == "other":
+        print(f'Name: {item[0]}')
+        print(f'{item[1]}')
+        print(f'Description: {item[4]}')
+        print(f'Price: {item[5]}')
+        print(TEXTBRAKE)
+
+    print("Would you like to buy this item? (y/n)")
+    key = getkey()
+    match key:
+        case "y":
+            if PLAYERSTATS[2] < item[5]:
+                goldDiff = item[5] - PLAYERSTATS[2]
+                print(f'You do not have enough gold to buy this item. Missing: {goldDiff}')
+                return
+            else:
+                buyItemsInShop(item=item, type=type)
+        case "n":
+            return
+        
 
 
 
 def hiddenPeddlerShop():
+    # TODO Ha párszor össze vissza megy a user akkor többször kell kilépni, ezt kell megoldani
     keepBrowsing = True
     while keepBrowsing:
         print("HIDDEN PEDDLER")
@@ -260,47 +337,94 @@ def hiddenPeddlerShop():
         print(TEXTBRAKE)
 
         key = getkey()
-        if key == "1":
-            print("1. Xiphos")
-            print("2. Labrys")
-            print("B - Back")
-            print(TEXTBRAKE)
-            key = getkey()
+        match key:
+            case "1":
+                print("1. Xiphos")
+                print("2. Labrys")
+                print("B - Back")
+                print(TEXTBRAKE)
 
-            if key == "1":
-                lookAtItemsInShop(equipments.Weapons.Xiphos(), type="weapon")
+                key = getkey()
+                match key:
+                    case "1" :
+                        item = equipments.Weapons.Xiphos()
+                        if INVENTORY[0] == item:
+                            print("You already own this item!")
+                            hiddenPeddlerShop()
+                        else:
+                            lookAtItemsInShop(item=item, type="weapon")
+                    case "2" :
+                        item = equipments.Weapons.Labrys()
+                        if INVENTORY[0] == item:
+                            print("You already own this item!")
+                            hiddenPeddlerShop()
+                        else:
+                            lookAtItemsInShop(item=item, type="weapon")
+                    case "b":
+                        hiddenPeddlerShop()
+            case "2":
+                print("1. Pelte")
+                print("2. Thureos")
+                print("B - Back")
+                print(TEXTBRAKE)
 
-            elif key == "2":
-                lookAtItemsInShop(equipments.Weapons.Labrys(), type="weapon")
-
-            elif key == "b":
-                hiddenPeddlerShop()
-
-        elif key == "2":
-            None
-            # TODO
-        elif key == "3":
-            None
-            # TODO
-        elif key == "q":
-            return
+                key = getkey()
+                match key:
+                    case "1" :
+                        item = equipments.Shields.Pelte()
+                        if INVENTORY[1] == item:
+                            print("You already own this item!")
+                            print(TEXTBRAKE)
+                            hiddenPeddlerShop()
+                        else:
+                            lookAtItemsInShop(item=item, type="shield")
+                    case "2" :
+                        item = equipments.Shields.Thureos()
+                        print(INVENTORY[0], INVENTORY[0] == item, item)
+                        if INVENTORY[1] == item:
+                            print("You already own this item!")
+                            print(TEXTBRAKE)
+                            hiddenPeddlerShop()
+                        else:
+                            lookAtItemsInShop(item=item, type="shiled")
+                    case "b":
+                        hiddenPeddlerShop()
+            case "3":
+                print("1. Heal Potion")
+                print("2. Shield Potion")
+                print(TEXTBRAKE)
+                key = getkey()
+                match key:
+                    # ? Max mennyiség?
+                    # TODO egyszerre lehessen többet venni
+                    case "1":
+                        item = equipments.Potions.Heal()
+                        lookAtItemsInShop(item=item, type="other")
+                    case "2":
+                        item = equipments.Potions.Shield()
+                        lookAtItemsInShop(item=item, type="other")
+                    # ? Több equipment?
+            case "q":
+                return
 
 
 def hiddenPeddler():
     dialogues.Start.hiddenPeddler(chapter=1)
+
     key = getkey()
+    match key:
+        case "y":
+                print(TEXTBRAKE)
+                printSlow(bcolors.BOLD+ "Hidden Peddler: " + bcolors.ENDC + "Ah, a seeker of the arcane, I see. In these woods, secrets are my trade.\n"
+                        "\tPotions brewed under the moon's watchful eye, herbs plucked from the oldest groves, and swords and shields, each bearing the essence of this ancient realm. What brings you to my humble emporium?")
+                print(TEXTBRAKE)
+                hiddenPeddlerShop()
+                
 
-    if key == "y":
-            print(TEXTBRAKE)
-            printSlow('\033[1m' + "Hidden Peddler:" + '\033[0m' + "Ah, a seeker of the arcane, I see. In these woods, secrets are my trade.\n"
-                    "\tPotions brewed under the moon's watchful eye, herbs plucked from the oldest groves, and swords and shields, each bearing the essence of this ancient realm. What brings you to my humble emporium?")
-            print(TEXTBRAKE)
-            hiddenPeddlerShop()
-            
-
-    elif key == "n":
-            printSlow("\nYou continue your journey towards the cript.\n")
-            quit
+        case "n":
+                printSlow("\nYou continue your journey towards the cript.\n")
+                # ! INNEN FOLYTATÓDIK
+                quit
     
 
 
@@ -311,19 +435,20 @@ def parnassusForest():
     if chance >= 7:
         print(f'Name: {equipments.Weapons.Dory()[0]}')
         print(f'{equipments.Weapons.Dory()[1]}')
-        print('Damage: ' + '\33[32m' + str(equipments.Weapons.Dory()[2]) + '\33[0m')
-        print('Durability: ' + '\33[32m' + str(equipments.Weapons.Dory()[3]) + '\33[0m')
+        print('Damage: ' + bcolors.OKGREEN + str(equipments.Weapons.Dory()[2]) + bcolors.ENDC)
+        print('Durability: ' + bcolors.OKGREEN + str(equipments.Weapons.Dory()[3]) + bcolors.ENDC)
         print(f'Description: {equipments.Weapons.Dory()[4]}')
         print(TEXTBRAKE)
 
         print("Would you like to take it? (y/n)")
         key = getkey()
-        if key == "y":
-            INVENTORY[0] = equipments.Weapons.Dory()
-            TEXTBRAKE
-            checkInventory()
-        elif key == "n":
-            None
+        match key:
+            case"y":
+                INVENTORY[0] = equipments.Weapons.Dory()
+                TEXTBRAKE
+                checkInventory()
+            case"n":
+                None
     dialogues.Start.parnassusForest(chance=chance, first=False)
     fight(enemy=enemies.Enemies.forestSentinel())
     hiddenPeddler()
@@ -344,12 +469,13 @@ def startingDialog():
     checkInventory()
     print("Would you like to skip the dialogue? (y/n) ")
     key = getkey()
-    if key == "n":
-        dialogues.Start.thalassa()
-        print(TEXTBRAKE)
-        tutorialFight()
-    elif key == "y":
-        tutorialFight()
+    match key:
+        case "n":
+            dialogues.Start.thalassa()
+            print(TEXTBRAKE)
+            tutorialFight()
+        case "y":
+            tutorialFight()
     
 
 
@@ -357,12 +483,13 @@ def startingDialog():
 def intro():
     print("Would you like to skip the intro? (y/n) ")
     key = getkey()
-    if key == "n":
-        dialogues.Start.intro()
-        print(TEXTBRAKE)
-        startingDialog()
-    elif key == "y":
-        startingDialog()
+    match key:
+        case "n":
+            dialogues.Start.intro()
+            print(TEXTBRAKE)
+            startingDialog()
+        case "y":
+            startingDialog()
         
 
 
@@ -374,22 +501,24 @@ def newGame():
     print(TEXTBRAKE)
 
     key = getkey()
-
-    if key == "1":
-        os.system('cls||clear')
-        intro()
-    elif key == "2":
-        mainMenu()
+    match key:
+        case "1":
+            os.system('cls||clear')
+            intro()
+        case "2":
+            mainMenu()
 
 
 
 def loadGame():
     None
     # TODO Will be later implemented
+    # TODO font size should be changeable
 
 def mainMenu():
     keepMenu = True
     while keepMenu == True:
+        os.system('cls||clear')
         print(""" 
              _____                  _                _   _       _             ______ _                   __   _                               _     
             /  ___|                | |              | | | |     | |            | ___ (_)                 / _| | |                             | |    
@@ -410,25 +539,26 @@ def mainMenu():
         global INVENTORY
         global NAME
 
-        PLAYERSTATS = [100, 0, 100] #HP, SHIELD, GOLD
+        PLAYERSTATS = [100, 0, 1000] #HP, SHIELD, GOLD
+        # ! VISSZAVÁLTOZTATNI A GOLDOT 100-RA
         INVENTORY = [equipments.Weapons.Kolós(), equipments.Shields.AspisOfHoplon(), equipments.Potions.Heal(), equipments.Potions.Shield()]
         NAME = ""
 
         key = getkey()
         print(TEXTBRAKE)
-
-        if key == "1":
-            keepMenu = False
-            newGame()
-        elif key == "2":
-            keepMenu = False
-            loadGame()
-        elif key == "3":
-            keepMenu = False
-        elif key == "4":
-            # ! TESZT mód
-            keepMenu = False
-            hiddenPeddler()
+        match key:
+            case "1":
+                keepMenu = False
+                newGame()
+            case "2":
+                keepMenu = False
+                loadGame()
+            case "3":
+                keepMenu = False
+            case "4":
+                # ! TESZT mód
+                keepMenu = False
+                hiddenPeddler()
     
     
 mainMenu()

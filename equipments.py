@@ -118,7 +118,7 @@ class Shields:
         shield = 1
         durability = 100
         description = "The aspis or hoplon was a large, round shield made of wood and covered with bronze. It was an essential defensive tool used by hoplites, providing protection for the warrior and forming a phalanx formation with other soldiers."
-
+        
         return name, image, shield, durability, description
     
     def Pelte():
@@ -144,10 +144,11 @@ class Shields:
                       (/((/((.                    
                         (.#(        """
         shield = 3
-        durability = "175"
+        durability = 175
         description = "The pelte was a crescent-shaped shield, often associated with light infantry and skirmishers such as peltasts. It was smaller and lighter than the hoplon, providing mobility for troops who needed to move quickly on the battlefield. The pelte was typically made of wood and covered with leather."
-
-        return name, image, shield, durability, description
+        price = 100
+        
+        return name, image, shield, durability, description, price
     
     def Thureos():
         name = "Thureos"
@@ -173,10 +174,11 @@ class Shields:
                       ,*,(##//(,*/.                   
                           .,*.                        """
         shield = 5
-        durability = "200"
+        durability = 200
         description = "The thureos was a rectangular or oval-shaped shield that became popular during the Hellenistic period. It had a curved surface and was slightly concave, providing better protection than some other shield types."
-
-        return name, image, shield, durability, description
+        price = 240
+        
+        return name, image, shield, durability, description, price
     
 
 class Potions:
@@ -208,8 +210,9 @@ class Potions:
         ability = 20
         quantity = 3
         description = "+20 HP"
+        price = 20
 
-        return name, image, ability, quantity, description
+        return name, image, ability, quantity, description, price
     
     def Shield():
         name = "Shield potion"
@@ -234,8 +237,9 @@ class Potions:
         ability = 20
         quantity = 2
         description = "+20 Shield"
+        price = 30
 
-        return name, image, ability, quantity, description
+        return name, image, ability, quantity, description, price
 
 
 class Others:
